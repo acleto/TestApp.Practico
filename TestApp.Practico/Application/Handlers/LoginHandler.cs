@@ -28,7 +28,7 @@ namespace TestApp.Practico.Application.Handlers
                     throw new("Usuario o contraseña incorrectos.");
                 }
 
-                var token = _jwtService.GenerateToken(user);
+                var token = _jwtService.GenerateToken(user.UserName);
 
                 return new LoginResponseDto
                 {
