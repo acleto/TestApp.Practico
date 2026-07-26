@@ -28,8 +28,7 @@ namespace TestApp.Practico.Application.Handlers
             var result = await _repository.CreateAsync(articleRecord,cancellationToken);
 
             return  new ArticleRecordDto { 
-                
-                Id = result.Id,
+
                 Category= result.Category,
                 Name = result.Name,
                 Price = result.Price,
