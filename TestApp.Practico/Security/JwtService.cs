@@ -17,13 +17,13 @@ namespace TestApp.Practico.Security
             _configuration = configuration;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateToken(string username)
         {
 
             var claims = new List<Claim>
             {
                     new Claim (
-                            ClaimTypes.Name , user.UserName
+                            ClaimTypes.Name , username
                         )
             };
 

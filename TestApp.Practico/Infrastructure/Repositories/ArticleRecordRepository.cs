@@ -1,4 +1,5 @@
-﻿using TestApp.Practico.Application.DTOs;
+﻿using Microsoft.EntityFrameworkCore;
+using TestApp.Practico.Application.DTOs;
 using TestApp.Practico.Application.Interfaces;
 using TestApp.Practico.Domain;
 using TestApp.Practico.Infrastructure.Data;
@@ -13,13 +14,34 @@ namespace TestApp.Practico.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<ArticleRecordDto> CreateAsync(ArticleRecord articleRecord,CancellationToken cancellationToken)
+        public async Task<ArticleRecordDto> CreateAsync(ArticleRecord articleRecord, CancellationToken cancellationToken)
         {
-            await _context.ArticleRecord.AddAsync(articleRecord ,  cancellationToken);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            try
+            {
 
-            return new ArticleRecordDto();
+                await _context.Database.ExecuteSqlInterpolatedAsync(
+                    $"EXEC sp_AddProductArticle {articleRecord.Category}, {articleRecord.Name}, {articleRecord.Price}",
+                    cancellationToken
+                );
+
+                return new ArticleRecordDto
+                {
+                    Category = articleRecord.Category,
+                    Name = articleRecord.Name,
+                    Price = articleRecord.Price
+
+                };
+
+
+            }
+            catch (Exception ex)
+            {
+
+                throw (new Exception(ex.Message));
+
+            }
+
         }
     }
 }
