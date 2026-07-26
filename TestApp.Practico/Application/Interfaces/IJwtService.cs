@@ -1,9 +1,10 @@
-﻿using TestApp.Practico.Domain;
+﻿using TestApp.Practico.Application.DTOs;
+using TestApp.Practico.Domain;
 
 namespace TestApp.Practico.Application.Interfaces
 {
     public interface IJwtService
     {
-        string GenerateToken(User user);
+        string GenerateToken(string user);
     }
 }

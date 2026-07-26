@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using TestApp.Practico.Application.DTOs;
 using TestApp.Practico.Application.Interfaces;
 using TestApp.Practico.Domain;
@@ -17,21 +18,26 @@ namespace TestApp.Practico.Infrastructure.Repositories
 
         }
 
-        public async Task<User?> ValidateUserAsyc(string username, string password, CancellationToken cancellationToken)
+        public async Task<LoginResult?> ValidateUserAsyc(string username, string password, CancellationToken cancellationToken)
         {
 
-            //return await _context.Users
-            //                .AsNoTracking()
-            //                .FirstOrDefaultAsync(
-            //                    user =>
-            //                        user.UserName == username &&
-            //                        user.Password == password,
-            //                    cancellationToken);
-
-            return await Task.FromResult(new User
+            try
             {
-                UserName = username,
-            });
+                var resultado = await _context.Database
+                    .SqlQuery<LoginResult>(
+                        $"EXEC sp_ValidarUsuario {username}, {password}")
+                    .ToListAsync(cancellationToken);
+
+                return resultado.FirstOrDefault(); ;
+            }
+            catch (Exception ex)
+            {
+
+                throw (new Exception(ex.Message));
+            }
+
+
+
         }
     }
 }
